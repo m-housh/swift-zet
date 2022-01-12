@@ -32,6 +32,6 @@ public struct ZetConfigClient {
 
 fileprivate let jsonEncoder: JSONEncoder = {
   let e = JSONEncoder()
-  e.outputFormatting = [.prettyPrinted, .sortedKeys]
+  e.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
   return e
 }()

@@ -47,6 +47,17 @@ final class ZetConfigClientTests: XCTestCase {
     XCTAssert(FileManager.default.fileExists(atPath: url.deletingLastPathComponent().relativePath))
   }
   
+  func testZetURLDoesNotThrowErrorWhenDirectoryExists() throws {
+    let config = ZetConfig.init(zetDirectory: "/tmp")
+    let url = try config.zetURL()
+    XCTAssertTrue(FileManager.default.fileExists(atPath: url.relativePath))
+  }
+  
+  func testZetURLThrowsErrorIfDirectoryDoesNotExist() throws {
+    let config = ZetConfig.init(zetDirectory: "/some/path/that/does/not/exist")
+    XCTAssertThrowsError(try config.zetURL())
+  }
+  
 }
 
 class CapturingConfigData {

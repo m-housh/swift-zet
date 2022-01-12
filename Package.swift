@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
   name: "swift-zet",
   platforms: [
-    .macOS(.v10_13)
+    .macOS(.v10_15)
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
@@ -38,13 +38,6 @@ let package = Package(
       name: "ZetConfig",
       dependencies: []
     ),
-    .testTarget(
-      name: "ZetConfigTests",
-      dependencies: ["ZetConfig"],
-      resources: [
-        .copy("test-config.json")
-      ]
-    ),
     .target(
       name: "ZetConfigClient",
       dependencies: ["ZetConfig"]
@@ -66,24 +59,16 @@ let package = Package(
       name: "zet",
       dependencies: [
         "ShellCommand",
+        "ZetClientLive",
         "ZetConfig",
         "ZetConfigClient",
         "ZetEnv",
-        "ZetManager",
         .product(name: "ArgumentParser", package: "swift-argument-parser")
       ]
     ),
     .testTarget(
       name: "swift-zetTests",
       dependencies: ["zet"]
-    ),
-    .target(
-      name: "ZetManager",
-      dependencies: []
-    ),
-    .testTarget(
-      name: "ZetManagerTests",
-      dependencies: ["ZetManager"]
     ),
   ]
 )

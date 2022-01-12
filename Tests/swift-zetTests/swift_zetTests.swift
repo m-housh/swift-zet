@@ -4,20 +4,20 @@ import class Foundation.Bundle
 
 final class swift_zetTests: XCTestCase {
   
-  func testIsosec() {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
-    let date = formatter.date(from: "2022/01/01 12:00:00")!
-    XCTAssertEqual(date.isosec, "20220101120000")
-  }
-  
-  func testDateFromIsosec() {
-    let isosec = "20220101120000"
-    let date = Date(isosec: isosec)
-    XCTAssertEqual(isosec, date!.isosec)
-    
-    XCTAssertNil(Date(isosec: "2022/01/01 12:00:00"))
-  }
+//  func testIsosec() {
+//    let formatter = DateFormatter()
+//    formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+//    let date = formatter.date(from: "2022/01/01 12:00:00")!
+//    XCTAssertEqual(date.isosec, "20220101120000")
+//  }
+//  
+//  func testDateFromIsosec() {
+//    let isosec = "20220101120000"
+//    let date = Date(isosec: isosec)
+//    XCTAssertEqual(isosec, date!.isosec)
+//    
+//    XCTAssertNil(Date(isosec: "2022/01/01 12:00:00"))
+//  }
 //    func testExample() throws {
 //        // This is an example of a functional test case.
 //        // Use XCTAssert and related functions to verify your tests produce the correct
