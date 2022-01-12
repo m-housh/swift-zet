@@ -1,11 +1,23 @@
 import Foundation
 
+/// Represents the configuration for the ``zet`` application.
 public struct ZetConfig: Codable, Equatable {
   
+  /// The current working zet repository.
   public var current: CurrentZets
+  
+  /// The path to the public zet repository.
   public var publicZets: String
+  
+  /// The path to the private zet repository.
   public var privateZets: String
   
+  /// Create a new ``ZetConfig`` with the default values.
+  ///
+  /// - Parameters:
+  ///   - current: The ``CurrentZets`` that are active.
+  ///   - publicZets: The path to the public zet repository.
+  ///   - privateZets: The path to the private zet repository.
   public init(
     current: CurrentZets = .public,
     publicZets: String = "~/zet",
@@ -16,6 +28,7 @@ public struct ZetConfig: Codable, Equatable {
     self.privateZets = privateZets
   }
   
+  /// Represents the currently active zet repository.
   public enum CurrentZets: String, Codable, CaseIterable {
     case `public`
     case `private`
@@ -24,6 +37,11 @@ public struct ZetConfig: Codable, Equatable {
 
 extension ZetConfig {
   
+  /// Load a ``ZetConfig`` from a file path.
+  ///
+  /// - Parameters:
+  ///   - url: The file path to load the zet config from.
+  ///   - decoder: The ``JSONDecoder`` used to decode the zet config.
   public static func load(
     _ url: URL,
     decoder: JSONDecoder = .init()
@@ -33,6 +51,11 @@ extension ZetConfig {
     return config
   }
   
+  /// Load a ``ZetConfig`` from a file path.
+  ///
+  /// - Parameters:
+  ///   - path: The file path to load the zet config from.
+  ///   - decoder:  The ``JSONDecoder`` used to decode the zet config.
   public static func load(
     _ path: String,
     decoder: JSONDecoder = .init()
@@ -44,6 +67,11 @@ extension ZetConfig {
 
 extension ZetConfig {
   
+  /// Writes a ``ZetConfig`` to a file path.
+  ///
+  /// - Parameters:
+  ///   - filePath: The file path to write the zet config from.
+  ///   - encoder:  The ``JSONEecoder`` used to encode the zet config.
   public func write(
     to filePath: URL,
     encoder: JSONEncoder? = nil
@@ -53,6 +81,11 @@ extension ZetConfig {
     try data.write(to: filePath)
   }
   
+  /// Writes a ``ZetConfig`` to a file path.
+  ///
+  /// - Parameters:
+  ///   - filePath: The file path to write the zet config from.
+  ///   - encoder:  Optional ``JSONEecoder`` used to encode the zet config.
   public func write(
     to filePath: String,
     encoder: JSONEncoder? = nil

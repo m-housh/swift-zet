@@ -16,6 +16,14 @@ let package = Package(
       dependencies: []
     ),
     .target(
+      name: "ZetClient",
+      dependencies: []
+    ),
+    .target(
+      name: "ZetClientLive",
+      dependencies: ["ZetClient"]
+    ),
+    .target(
       name: "ZetConfig",
       dependencies: []
     ),
@@ -41,12 +49,21 @@ let package = Package(
         "ShellCommand",
         "ZetConfig",
         "ZetEnv",
+        "ZetManager",
         .product(name: "ArgumentParser", package: "swift-argument-parser")
       ]
     ),
     .testTarget(
       name: "swift-zetTests",
       dependencies: ["zet"]
+    ),
+    .target(
+      name: "ZetManager",
+      dependencies: []
+    ),
+    .testTarget(
+      name: "ZetManagerTests",
+      dependencies: ["ZetManager"]
     ),
   ]
 )

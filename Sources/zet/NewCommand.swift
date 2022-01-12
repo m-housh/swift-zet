@@ -39,15 +39,30 @@ struct NewCommand: ParsableCommand {
   
   func run() throws {
     let config = try parseConfig()
-    let currentDir = config.currentDir
-    let zetDir = currentDir.appendingPathComponent(Date().isosec)
-    let command = ShellCommand(command: "mkdir -p \(zetDir.path)")
-    try command.run()
-    let readme = zetDir.appendingPathComponent("README.md")
-    let title = "# \(title.joined(separator: " "))\n\n"
-    try title.write(toFile: readme.path, atomically: true, encoding: .utf8)
+    let dir = try makeIsosecDir(config: config)
+    let readme = try makeReadme(in: dir, title: title.joined(separator: " "))
     print("\(readme.path)")
   }
+}
+
+extension ShellCommand {
+  
+  static func mkdir(path: URL) -> ShellCommand {
+    .init(command: "mkdir -p \(path.path)")
+  }
+}
+
+fileprivate func makeIsosecDir(config: ZetConfig) throws -> URL {
+  let isosecDir = config.currentDir.appendingPathComponent(Date().isosec)
+  try ShellCommand.mkdir(path: isosecDir).run()
+  return isosecDir
+}
+
+fileprivate func makeReadme(in dir: URL, title: String) throws -> URL {
+  let path = dir.appendingPathComponent("README.md")
+  let title = "# \(title)\n\n"
+  try title.write(to: path, atomically: true, encoding: .utf8)
+  return path
 }
 
 extension ZetConfig {

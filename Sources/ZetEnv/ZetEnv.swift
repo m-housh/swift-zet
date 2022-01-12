@@ -1,12 +1,21 @@
 import Foundation
 
+/// Represents environment variables for the ``zet`` application.
 public struct ZetEnv: Codable, Equatable {
   
+  /// The username for `git`.
   public var gitUser: String
-  public var gitReposDirectory: String
-  public var gitBranch: String
-  public var zetConfig: String
   
+  /// The directory for the users`git` repositories.
+  public var gitReposDirectory: String
+  
+  /// The default `git` branch name.
+  public var gitBranch: String
+  
+  /// The path to the ``ZetConfig``
+  public var zetConfig: String
+ 
+  /// Creates a new ``ZetEnv`` with the default values.
   init(
     gitUser: String = "m-housh",
     gitReposDirectory: String = "~/Repos",
@@ -19,6 +28,7 @@ public struct ZetEnv: Codable, Equatable {
     self.zetConfig = zetConfig
   }
   
+  /// Custom coding keys.
   private enum CodingKeys: String, CodingKey {
     case gitUser = "GITUSER"
     case gitReposDirectory = "GITREPOS"
@@ -29,6 +39,7 @@ public struct ZetEnv: Codable, Equatable {
 
 extension ZetEnv {
   
+  /// Create a ``ZetEnv`` parsing environment variables.
   public static func load(
     environment: [String: String] = ProcessInfo.processInfo.environment,
     encoder: JSONEncoder = .init(),

@@ -1,10 +1,19 @@
 import Foundation
 
+/// Represents a shell command that can be executed as a sub-process.
 public struct ShellCommand {
   
+  /// The executable shell to use.
   public var shell: Shell
+  
+  /// The shell command to run.
   public var command: String
   
+  /// Create a new a ``ShellCommand``.
+  ///
+  /// - Parameters:
+  ///   - shell: The executable shell to use.
+  ///   - command: The shell command to run.
   public init(
     shell: Shell = .sh,
     command: String
@@ -13,6 +22,10 @@ public struct ShellCommand {
     self.command = command
   }
   
+  /// Run the shell command as a sub-process.
+  ///
+  /// - Parameters:
+  ///   - environment: Optional environment variables for the process.
   @discardableResult
   public func run(environment: [String: String]? = nil) throws -> Data {
     let process = Process()
@@ -36,6 +49,7 @@ public struct ShellCommand {
     return outputData
   }
   
+  /// Represents the shell executable paths that can be used in ``ShellCommand``'s.
   public enum Shell: String, CaseIterable {
     case sh, bash, zsh
     
