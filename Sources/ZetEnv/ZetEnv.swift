@@ -33,7 +33,7 @@ public struct ZetEnv: Codable, Equatable {
     case gitUser = "GITUSER"
     case gitReposDirectory = "GITREPOS"
     case gitBranch = "GITBRANCH"
-    case zetConfig = "ZET_CONFIG"
+    case zetConfig = "ZETCONFIG"
   }
 }
 

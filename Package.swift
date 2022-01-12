@@ -9,6 +9,7 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
+//    .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay.git", from: "0.2.0")
   ],
   targets: [
     .target(
@@ -17,11 +18,21 @@ let package = Package(
     ),
     .target(
       name: "ZetClient",
-      dependencies: []
+      dependencies: [
+//        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+      ]
     ),
     .target(
       name: "ZetClientLive",
       dependencies: ["ZetClient"]
+    ),
+    .testTarget(
+      name: "ZetClientTests",
+      dependencies: [
+        "ZetClient",
+        "ZetClientLive"
+//        .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay")
+      ]
     ),
     .target(
       name: "ZetConfig",
@@ -33,6 +44,14 @@ let package = Package(
       resources: [
         .copy("test-config.json")
       ]
+    ),
+    .target(
+      name: "ZetConfigClient",
+      dependencies: ["ZetConfig"]
+    ),
+    .testTarget(
+      name: "ZetConfigClientTests",
+      dependencies: ["ZetConfigClient"]
     ),
     .target(
       name: "ZetEnv",
@@ -48,6 +67,7 @@ let package = Package(
       dependencies: [
         "ShellCommand",
         "ZetConfig",
+        "ZetConfigClient",
         "ZetEnv",
         "ZetManager",
         .product(name: "ArgumentParser", package: "swift-argument-parser")

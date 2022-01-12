@@ -18,6 +18,13 @@ extension URL {
   var modificationDate: Date? {
     try? resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate
   }
+  
+  var readme: URL {
+    if lastPathComponent != "README.md" {
+      return self.appendingPathComponent("README.md")
+    }
+    return self
+  }
 }
 
 extension FileManager {

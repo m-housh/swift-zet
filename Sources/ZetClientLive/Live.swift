@@ -32,17 +32,16 @@ extension ZetClient {
         return dir
       },
       fetchTitle: { path in
-        var path = path
-        if path.lastPathComponent != "README.md" {
-          path = path.appendingPathComponent("README.md")
-        }
-        let fileString = try String(contentsOf: path)
+        let fileString = try String(contentsOf: path.readme)
         guard let titleLine = fileString.split(separator: "\n").first else {
-          // throw an error
-          fatalError()
+          throw ZetClientError.titleNotFound(path)
         }
         return titleLine.replacingOccurrences(of: "# ", with: "")
       }
     )
   }
+}
+
+public enum ZetClientError: Error {
+  case titleNotFound(URL)
 }

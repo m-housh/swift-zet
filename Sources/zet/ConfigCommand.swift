@@ -2,6 +2,7 @@ import ArgumentParser
 import Foundation
 import ShellCommand
 import ZetConfig
+import ZetConfigClient
 import ZetEnv
 
 struct ConfigCommand: ParsableCommand {
@@ -50,12 +51,27 @@ struct ConfigCommand: ParsableCommand {
       helpNames: nil
     )
     
-    @OptionGroup var options: ConfigOptions
+//    @OptionGroup var options: ConfigOptions
+    
+    @Argument(help: "Optional configuration path.")
+    var path: URL?
+    
+    private func _parsePath() -> URL {
+      guard let path = path else {
+        guard let env = try? ZetEnv.load() else {
+          // throw an error
+          fatalError("Could not parse path.")
+        }
+        return URL(fileURLWithPath: NSString(string: env.zetConfig).expandingTildeInPath)
+      }
+      return path
+    }
     
     func run() throws {
-      let path = try options.parse().filePath
-      try ZetConfig().write(to: path)
-      print("Wrote configuration file to: '\(path)'")
+      let path = _parsePath()
+      let client = ZetConfigClient.live
+      try client.write(config: .init(), to: path)
+      print("Wrote configuration file to: '\(path.path)'")
     }
   }
   
@@ -105,3 +121,4 @@ struct ConfigCommand: ParsableCommand {
     }
   }
 }
+

@@ -1,5 +1,17 @@
 import Foundation
 
+public struct ZetConfig2: Codable, Equatable {
+  public var zetDirectory: URL
+  
+  public init(zetDirectory: URL) {
+    self.zetDirectory = zetDirectory
+  }
+  
+  public init(zetDirectory: String) {
+    self.zetDirectory = URL(fileURLWithPath: NSString(string: zetDirectory).expandingTildeInPath)
+  }
+}
+
 /// Represents the configuration for the ``zet`` application.
 public struct ZetConfig: Codable, Equatable {
   
