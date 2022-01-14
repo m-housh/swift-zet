@@ -7,7 +7,7 @@ A command line application to help manage a `Zettelkasten` note repository.
 Easiest installation is with homebrew.
 
 ```bash
-brew tap m-housh/homebrew-formulae
+brew tap m-housh/formulae
 ```
 
 ```bash 
