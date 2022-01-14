@@ -19,7 +19,7 @@ final class ZetClientTests: XCTestCase {
     XCTAssertEqual(title, "Test")
     XCTAssertEqual(try zetClient.title(in: zet.deletingLastPathComponent()), title)
     
-    let assets = try zetClient.makeAssets(in: zet.deletingLastPathComponent())
+    let assets = try zetClient.createAssets(in: zet.deletingLastPathComponent())
     XCTAssertEqual(assets.deletingLastPathComponent(), zetDir)
     
   }

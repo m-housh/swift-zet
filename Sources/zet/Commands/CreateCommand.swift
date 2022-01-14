@@ -20,33 +20,6 @@ struct CreateCommand: ParsableCommand {
     defaultSubcommand: ZetCommand.self, // Hmm, do we want it to always create a new zet??
     helpNames: nil
   )
-  
-//  struct ConfigOption: ParsableArguments {
-//
-//    @Option(name: [.short, .customLong("config")], help: "The configuration to use.")
-//    var configPath: String?
-//
-//    private func parseConfigPath() throws -> String {
-//      guard let config = configPath else {
-//        return try ZetEnv.load().zetConfig
-//      }
-//      return config
-//    }
-//
-//    private func config() throws -> ZetConfig {
-//      let configClient = ZetConfigClient.live
-//      guard let url = try? URL(argument: parseConfigPath()),
-//            let config = try? configClient.read(from: url)
-//      else {
-//        return .init()
-//      }
-//      return config
-//    }
-//
-//    func client() throws -> ZetClient {
-//      try .live(zetDirectory: config().zetURL())
-//    }
-//  }
  }
 
 extension CreateCommand {
@@ -79,9 +52,8 @@ extension CreateCommand {
       print("\(readme.path)")
     }
   }
-  
-  
 }
+
 extension CreateCommand {
   
   // MARK: Assets
@@ -107,9 +79,9 @@ extension CreateCommand {
       var assets: URL?
       
       if let path = path {
-        assets = try client.makeAssets(in: path)
+        assets = try client.createAssets(in: path)
       } else if let last = try client.lastModifiedDirectory() {
-        assets = try client.makeAssets(in: last)
+        assets = try client.createAssets(in: last)
       }
       
       guard let assets = assets else {

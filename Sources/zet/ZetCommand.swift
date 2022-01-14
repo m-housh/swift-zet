@@ -9,7 +9,13 @@ struct ZetCommand: ParsableCommand {
     discussion: "",
     version: VERSION,
     shouldDisplay: true,
-    subcommands: [CommitCommand.self, ConfigCommand.self, CreateCommand.self],
+    subcommands: [
+      CommitCommand.self,
+      ConfigCommand.self,
+      CreateCommand.self,
+      PullCommand.self,
+      PushCommand.self
+    ],
     defaultSubcommand: CreateCommand.self,
     helpNames: nil
   )

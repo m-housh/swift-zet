@@ -2,6 +2,7 @@ import Foundation
 
 extension ZetConfigClient {
  
+  /// Creates the live implementation of the ``ZetConfigClient``.
   public static let live = Self.init(
     writeData: { data, url in
       try url.ensureParentPath()

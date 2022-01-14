@@ -51,8 +51,6 @@ struct ConfigCommand: ParsableCommand {
       helpNames: nil
     )
     
-//    @OptionGroup var options: ConfigOptions
-    
     @Argument(help: "Optional configuration path.")
     var path: URL?
     

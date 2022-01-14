@@ -9,6 +9,8 @@ final class GitClientTests: XCTestCase {
     XCTAssertEqual(try! client.commit(message: "message"), "\"message\"")
     XCTAssertEqual(try! client.lastMessage(), "Last")
     XCTAssertEqual(try! client.commit(message: nil), "\"Last\"")
+    XCTAssertEqual(try! client.pull(), "Pull")
+    XCTAssertEqual(try! client.push(), "Push")
   }
   
 }
@@ -25,6 +27,12 @@ extension GitClient {
       },
       lastMessage: {
         "Last".data(using: .utf8)!
+      },
+      pull: {
+        "Pull".data(using: .utf8)!
+      },
+      push: {
+        "Push".data(using: .utf8)!
       }
     )
   }

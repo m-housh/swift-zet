@@ -3,6 +3,10 @@ import ShellCommand
 
 extension GitClient {
   
+  /// Creates the live ``GitClient`` for the given zet directory.
+  ///
+  /// -  Parameters:
+  ///   - zetDirectory: The directory / repository that holds the zettelkasten notes.
   public static func live(zetDirectory: URL) -> GitClient {
     .init(
       add: {
@@ -15,6 +19,14 @@ extension GitClient {
       },
       lastMessage: {
         try ShellCommand(command: "git log -n 1 --format=%s")
+          .run(in: zetDirectory)
+      },
+      pull: {
+        try ShellCommand(command: "git pull")
+          .run(in: zetDirectory)
+      },
+      push: {
+        try ShellCommand(command: "git push")
           .run(in: zetDirectory)
       }
     )

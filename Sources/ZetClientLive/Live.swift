@@ -3,6 +3,11 @@ import Foundation
 
 extension ZetClient {
   
+  /// Create the live ``ZetClient``.
+  ///
+  /// - Parameters:
+  ///   - zetDirectory: The parent directory for the zettelkasten notes.
+  ///   - fileManager: The file manager to use.
   public static func live(zetDirectory: URL, fileManager: FileManager = .default) throws -> ZetClient {
     .init(
       zetDirectory: { zetDirectory },

@@ -7,7 +7,7 @@ struct CommitCommand: ParsableCommand {
   static let configuration: CommandConfiguration = .init(
     commandName: "commit",
     abstract: "Commit the zets to git.",
-    discussion: "",
+    discussion: "If you would like to use the last commit message then you can run `zet commit last` command.",
     version: VERSION,
     shouldDisplay: true,
     subcommands: [LastCommand.self, MessageCommand.self],
