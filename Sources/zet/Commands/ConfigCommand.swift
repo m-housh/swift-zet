@@ -11,10 +11,10 @@ struct ConfigCommand: ParsableCommand {
     commandName: "config",
     abstract: "Zet configuration commands",
     discussion: "",
-    version: "0.1",
+    version: VERSION,
     shouldDisplay: true,
-    subcommands: [Edit.self, Print.self, Write.self],
-    defaultSubcommand: nil,
+    subcommands: [Print.self, Write.self],
+    defaultSubcommand: Print.self,
     helpNames: nil
   )
   
@@ -44,7 +44,7 @@ struct ConfigCommand: ParsableCommand {
       commandName: "write",
       abstract: "Write the default configuration.",
       discussion: "",
-      version: "0.1",
+      version: VERSION,
       shouldDisplay: true,
       subcommands: [],
       defaultSubcommand: nil,
@@ -81,7 +81,7 @@ struct ConfigCommand: ParsableCommand {
       commandName: "print",
       abstract: "Print the configuration.",
       discussion: "",
-      version: "0.1",
+      version: VERSION,
       shouldDisplay: true,
       subcommands: [],
       defaultSubcommand: nil,
@@ -96,29 +96,4 @@ struct ConfigCommand: ParsableCommand {
       print("\(contents)")
     }
   }
-  
-  // Doesn't work as expected bc shell command is a sub-process, is my guess.
-  struct Edit: ParsableCommand {
-    
-    static var configuration: CommandConfiguration = .init(
-      commandName: "edit",
-      abstract: "Edit the configuration.",
-      discussion: "",
-      version: "0.1",
-      shouldDisplay: true,
-      subcommands: [],
-      defaultSubcommand: nil,
-      helpNames: nil
-    )
-    
-    @OptionGroup var options: ConfigOptions
-    
-    func run() throws {
-      let path = try options.parse().filePath
-      let command = ShellCommand.init(command: "exec vi \(path)")
-      try command.run()
-      print("Done.")
-    }
-  }
 }
-

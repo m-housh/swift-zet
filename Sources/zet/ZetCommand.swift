@@ -1,6 +1,5 @@
 import ArgumentParser
 import Foundation
-//import ZetManager
 
 @main
 struct ZetCommand: ParsableCommand {
@@ -8,9 +7,9 @@ struct ZetCommand: ParsableCommand {
     commandName: "zet",
     abstract: "The zet command",
     discussion: "",
-    version: "0.1",
+    version: VERSION,
     shouldDisplay: true,
-    subcommands: [ConfigCommand.self, CreateCommand.self],
+    subcommands: [CommitCommand.self, ConfigCommand.self, CreateCommand.self],
     defaultSubcommand: CreateCommand.self,
     helpNames: nil
   )

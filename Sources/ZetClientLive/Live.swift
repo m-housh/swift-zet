@@ -1,5 +1,5 @@
 import Foundation
-import ZetClient
+@_exported import ZetClient
 
 extension ZetClient {
   

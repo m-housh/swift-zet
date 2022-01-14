@@ -1,5 +1,6 @@
 import ArgumentParser
 import Foundation
+import GitClient
 import ZetClient
 import ZetClientLive
 import ZetConfig
@@ -13,39 +14,39 @@ struct CreateCommand: ParsableCommand {
     commandName: "create",
     abstract: "Creates a new zet.",
     discussion: "",
-    version: "0.1",
+    version: VERSION,
     shouldDisplay: true,
     subcommands: [AssetsCommand.self, ZetCommand.self],
     defaultSubcommand: ZetCommand.self, // Hmm, do we want it to always create a new zet??
     helpNames: nil
   )
   
-  struct ConfigOption: ParsableArguments {
-    
-    @Option(name: [.short, .customLong("config")], help: "The configuration to use.")
-    var configPath: String?
-    
-    private func parseConfigPath() throws -> String {
-      guard let config = configPath else {
-        return try ZetEnv.load().zetConfig
-      }
-      return config
-    }
-   
-    private func config() throws -> ZetConfig {
-      let configClient = ZetConfigClient.live
-      guard let url = try? URL(argument: parseConfigPath()),
-            let config = try? configClient.read(from: url)
-      else {
-        return .init()
-      }
-      return config
-    }
-    
-    func client() throws -> ZetClient {
-      try .live(zetDirectory: config().zetURL())
-    }
-  }
+//  struct ConfigOption: ParsableArguments {
+//
+//    @Option(name: [.short, .customLong("config")], help: "The configuration to use.")
+//    var configPath: String?
+//
+//    private func parseConfigPath() throws -> String {
+//      guard let config = configPath else {
+//        return try ZetEnv.load().zetConfig
+//      }
+//      return config
+//    }
+//
+//    private func config() throws -> ZetConfig {
+//      let configClient = ZetConfigClient.live
+//      guard let url = try? URL(argument: parseConfigPath()),
+//            let config = try? configClient.read(from: url)
+//      else {
+//        return .init()
+//      }
+//      return config
+//    }
+//
+//    func client() throws -> ZetClient {
+//      try .live(zetDirectory: config().zetURL())
+//    }
+//  }
  }
 
 extension CreateCommand {
@@ -56,7 +57,7 @@ extension CreateCommand {
       commandName: "zet",
       abstract: "Creates a new zet.",
       discussion: "",
-      version: "0.1",
+      version: VERSION,
       shouldDisplay: true,
       subcommands: [],
       defaultSubcommand: nil,
@@ -69,9 +70,12 @@ extension CreateCommand {
     var title: [String]
    
     func run() throws {
-      let readme = try configOption
-        .client()
-        .createZet(title: title.joined(separator: " "))
+      let title = title.joined(separator: " ")
+      let client = try configOption.client()
+      let readme = try client.createZet(title: title)
+      let gitClient = try configOption.gitClient()
+      try gitClient.add()
+      try gitClient.commit(message: title)
       print("\(readme.path)")
     }
   }
@@ -86,7 +90,7 @@ extension CreateCommand {
       commandName: "assets",
       abstract: "Create assets directory",
       discussion: "",
-      version: "0.1",
+      version: VERSION,
       shouldDisplay: true,
       subcommands: [],
       defaultSubcommand: nil,

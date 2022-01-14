@@ -1,5 +1,5 @@
 import Foundation
-import ZetConfig
+@_exported import ZetConfig
 
 public struct ZetConfigClient {
   var writeData: (Data, URL) throws -> ()
