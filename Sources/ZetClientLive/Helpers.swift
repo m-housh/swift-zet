@@ -30,6 +30,26 @@ extension URL {
     }
     return self
   }
+  
+  func title() throws -> String {
+    let fileString = try String(contentsOf: self)
+    guard let titleLine = fileString.split(separator: "\n")
+            .first(where: { $0.starts(with: "#") })
+    else { throw ZetClientError.titleNotFound(self) }
+    return titleLine.replacingOccurrences(of: "# ", with: "")
+  }
+}
+
+/// Sorts urls descending, by their modification date.
+///
+/// - Parameters:
+///   - lhs: The lhs url to check.
+///   - rhs: The rhs url to check.
+func modificationDate(_ lhs: URL, _ rhs: URL) -> Bool {
+  guard let lhsMod = lhs.modificationDate,
+        let rhsMod = rhs.modificationDate
+  else {  return false }
+  return lhsMod > rhsMod
 }
 
 extension FileManager {

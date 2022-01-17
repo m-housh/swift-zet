@@ -14,7 +14,9 @@ struct ZetCommand: ParsableCommand {
       ConfigCommand.self,
       CreateCommand.self,
       PullCommand.self,
-      PushCommand.self
+      PushCommand.self,
+      SearchCommand.self,
+      TitlesCommand.self
     ],
     defaultSubcommand: CreateCommand.self,
     helpNames: nil

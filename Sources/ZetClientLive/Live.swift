@@ -13,12 +13,7 @@ extension ZetClient {
       zetDirectory: { zetDirectory },
       lastModifiedDirectory: {
         try fileManager.directories(in: zetDirectory)
-          .sorted { lhs, rhs in
-            guard let lhsDate = lhs.modificationDate,
-                  let rhsDate = rhs.modificationDate
-            else { return false }
-            return lhsDate > rhsDate
-          }
+          .sorted(by: modificationDate(_:_:))
           .first
       },
       makeZet: { title in
@@ -37,11 +32,24 @@ extension ZetClient {
         return dir
       },
       fetchTitle: { path in
-        let fileString = try String(contentsOf: path.readme)
-        guard let titleLine = fileString.split(separator: "\n").first else {
-          throw ZetClientError.titleNotFound(path)
-        }
-        return titleLine.replacingOccurrences(of: "# ", with: "")
+        try path.readme.title()
+      },
+      titles: {
+        try fileManager.directories(in: zetDirectory)
+          .sorted(by: modificationDate(_:_:))
+          .map { parent -> URL? in
+            let readme = parent.readme
+            guard fileManager.isReadableFile(atPath: readme.relativePath) else {
+              return nil
+            }
+            return readme
+          }
+          .compactMap { readme in
+            guard let readme = readme,
+                    let title = try? readme.title()
+            else { return nil }
+            return (readme, title)
+          }
       }
     )
   }

@@ -18,6 +18,9 @@ public struct ZetClient {
   /// Get the title of a zettelkasten note in the given path.
   var fetchTitle: (URL) throws -> String
   
+  /// Get all the titles of the zets.
+  public var titles: () throws -> [(URL, String)]
+  
   /// Create a new ``ZetClient``.
   ///
   /// - Parameters:
@@ -31,13 +34,15 @@ public struct ZetClient {
     lastModifiedDirectory: @escaping () throws -> URL?,
     makeZet: @escaping (String) throws -> URL,
     makeAssetDirectory: @escaping (URL) throws -> URL,
-    fetchTitle: @escaping (URL) throws -> String
+    fetchTitle: @escaping (URL) throws -> String,
+    titles: @escaping () throws -> [(URL, String)]
   ) {
     self.zetDirectory = zetDirectory
     self.lastModifiedDirectory = lastModifiedDirectory
     self.makeZet = makeZet
     self.makeAssetDirectory = makeAssetDirectory
     self.fetchTitle =  fetchTitle
+    self.titles = titles
   }
  
   /// Create a new zettelkasten note in the directory with the given title.

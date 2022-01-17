@@ -9,6 +9,9 @@ public struct GitClient {
   /// Commit the working tree and files to `git`.
   var _commit: (String) throws -> Data
   
+  /// Search the working tree.
+  var _grep: (String) throws -> Data
+  
   /// Retrieve the last `git` commit message used.
   var _lastMessage: () throws -> Data
   
@@ -29,12 +32,14 @@ public struct GitClient {
   public init(
     add: @escaping () throws -> Data,
     commit: @escaping (String) throws -> Data,
+    grep: @escaping (String) throws -> Data,
     lastMessage: @escaping () throws -> Data,
     pull: @escaping () throws -> Data,
     push: @escaping () throws -> Data
   ) {
     self._add = add
     self._commit = commit
+    self._grep = grep
     self._lastMessage = lastMessage
     self._pull = pull
     self._push = push
@@ -61,6 +66,12 @@ public struct GitClient {
     return try _commit(commitMessage.quoted).shellOutput()
   }
   
+  /// Search the `git` files for the given string.
+  @discardableResult
+  public func grep(search: String) throws -> String {
+    try _grep(search).shellOutput()
+  }
+ 
   /// Retrieve the last `git` commit message used.
   @discardableResult
   public func lastMessage() throws -> String {
