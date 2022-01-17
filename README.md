@@ -11,7 +11,7 @@ brew tap m-housh/formulae
 ```
 
 ```bash 
-brew install swift-zet
+brew install m-housh/formulae/swift-zet
 ```
 
 ## Manual-Installation
