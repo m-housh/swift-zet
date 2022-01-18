@@ -7,6 +7,7 @@ final class GitClientTests: XCTestCase {
     let client = GitClient.testing
     XCTAssertEqual(try! client.add(), "Add")
     XCTAssertEqual(try! client.commit(message: "message"), "\"message\"")
+    XCTAssertEqual(try! client.grep(search: "something"), "something")
     XCTAssertEqual(try! client.lastMessage(), "Last")
     XCTAssertEqual(try! client.commit(message: nil), "\"Last\"")
     XCTAssertEqual(try! client.pull(), "Pull")
@@ -24,6 +25,9 @@ extension GitClient {
       },
       commit: { message in
         message.data(using: .utf8)!
+      },
+      grep: { search in
+        search.data(using: .utf8)!
       },
       lastMessage: {
         "Last".data(using: .utf8)!

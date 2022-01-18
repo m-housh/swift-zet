@@ -59,6 +59,9 @@ public struct GitClient {
   public func commit(message: String?) throws -> String {
     var commitMessage: String
     if let message = message {
+      if message.lowercased() == "last" {
+        commitMessage = try lastMessage()
+      }
       commitMessage = message
     } else {
       commitMessage = try lastMessage()
