@@ -35,6 +35,9 @@ extension CommitCommand {
     
     @OptionGroup var directoryOption: DirectoryOption
     
+    @Flag(inversion: .prefixedNo, help: "Enable or disable pushing to remote")
+    var push: Bool = true
+    
     @Argument var message: [String]
     
     func run() throws {
@@ -43,6 +46,9 @@ extension CommitCommand {
       }
       let gitClient = try directoryOption.gitClient()
       let commit = try gitClient.commit(message: message.joined(separator: " "))
+      if push {
+        try gitClient.push()
+      }
       print(commit)
     }
   }
