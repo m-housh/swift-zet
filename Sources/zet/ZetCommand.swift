@@ -13,6 +13,7 @@ struct ZetCommand: ParsableCommand {
       CommitCommand.self,
 //      ConfigCommand.self,
       CreateCommand.self,
+      LastCommand.self,
       PullCommand.self,
       PushCommand.self,
       SearchCommand.self,
