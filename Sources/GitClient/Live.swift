@@ -32,6 +32,10 @@ extension GitClient {
       push: {
         try ShellCommand(command: "git push")
           .run(in: zetDirectory)
+      },
+      status: {
+        try ShellCommand(command: "git status")
+          .run(in: zetDirectory)
       }
     )
   }

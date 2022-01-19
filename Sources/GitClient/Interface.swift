@@ -21,6 +21,9 @@ public struct GitClient {
   /// Push commits to the remote.
   var _push: () throws -> Data
   
+  /// Retrieve the `git` status.
+  var _status: () throws -> Data
+  
   /// Create a new ``GitClient``.
   ///
   /// - Parameters:
@@ -35,7 +38,8 @@ public struct GitClient {
     grep: @escaping (String) throws -> Data,
     lastMessage: @escaping () throws -> Data,
     pull: @escaping () throws -> Data,
-    push: @escaping () throws -> Data
+    push: @escaping () throws -> Data,
+    status: @escaping () throws -> Data
   ) {
     self._add = add
     self._commit = commit
@@ -43,6 +47,7 @@ public struct GitClient {
     self._lastMessage = lastMessage
     self._pull = pull
     self._push = push
+    self._status = status
   }
   
   /// Add files to be tracked in `git`.
@@ -91,5 +96,10 @@ public struct GitClient {
   @discardableResult
   public func push() throws -> String {
     try _push().shellOutput()
+  }
+  
+  @discardableResult
+  public func status() throws -> String {
+    try _status().shellOutput()
   }
 }

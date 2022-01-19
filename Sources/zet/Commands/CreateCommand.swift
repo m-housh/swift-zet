@@ -48,7 +48,6 @@ extension CreateCommand {
       try gitClient.add()
       try gitClient.commit(message: title)
       print("\(readme.path)")
-      try ShellCommand(command: "vi \(readme.path)").run()
     }
   }
 }
