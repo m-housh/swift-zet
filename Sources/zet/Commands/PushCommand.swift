@@ -15,10 +15,10 @@ struct PushCommand: ParsableCommand {
     helpNames: nil
   )
   
-  @OptionGroup var configOption: ConfigOption
+  @OptionGroup var directoryOption: DirectoryOption
   
   func run() throws {
-    let client = try configOption.gitClient()
+    let client = try directoryOption.gitClient()
     let push = try client.push()
     print(push)
   }

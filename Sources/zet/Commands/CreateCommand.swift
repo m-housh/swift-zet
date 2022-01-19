@@ -3,10 +3,8 @@ import Foundation
 import GitClient
 import ZetClient
 import ZetClientLive
-import ZetConfig
 import ZetEnv
 import ShellCommand
-import ZetConfigClient
 
 struct CreateCommand: ParsableCommand {
   
@@ -37,16 +35,16 @@ extension CreateCommand {
       helpNames: nil
     )
     
-    @OptionGroup var configOption: ConfigOption
+    @OptionGroup var directoryOption: DirectoryOption
     
     @Argument(help: "The title of the zet.")
     var title: [String]
    
     func run() throws {
       let title = title.joined(separator: " ")
-      let client = try configOption.client()
+      let client = try directoryOption.client()
       let readme = try client.createZet(title: title)
-      let gitClient = try configOption.gitClient()
+      let gitClient = try directoryOption.gitClient()
       try gitClient.add()
       try gitClient.commit(message: title)
       print("\(readme.path)")
@@ -69,13 +67,13 @@ extension CreateCommand {
       helpNames: nil
     )
     
-    @OptionGroup var configOption: ConfigOption
+    @OptionGroup var directoryOption: DirectoryOption
     
     @Argument(help: "The path to create the assets directory in.")
     var path: URL?
     
     func run() throws {
-      let client = try configOption.client()
+      let client = try directoryOption.client()
       var assets: URL?
       
       if let path = path {

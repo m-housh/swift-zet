@@ -14,18 +14,23 @@ public struct ZetEnv: Codable, Equatable {
   
   /// The path to the ``ZetConfig``
   public var zetConfig: String
+  
+  /// The zet directory.
+  public var zetDirectory: String
  
   /// Creates a new ``ZetEnv`` with the default values.
-  init(
+  public init(
     gitUser: String = "m-housh",
     gitReposDirectory: String = "~/Repos",
     gitBranch: String = "main",
-    zetConfig: String = "~/.config/zet/config.json"
+    zetConfig: String = "~/.config/zet/config.json",
+    zetDirectory: String = "~/zets"
   ) {
     self.gitUser = gitUser
     self.gitReposDirectory = gitReposDirectory
     self.gitBranch = gitBranch
     self.zetConfig = zetConfig
+    self.zetDirectory = zetDirectory
   }
   
   /// Custom coding keys.
@@ -34,6 +39,7 @@ public struct ZetEnv: Codable, Equatable {
     case gitReposDirectory = "GITREPOS"
     case gitBranch = "GITBRANCH"
     case zetConfig = "ZETCONFIG"
+    case zetDirectory = "ZETDIR"
   }
 }
 

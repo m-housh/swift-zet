@@ -15,10 +15,10 @@ struct TitlesCommand: ParsableCommand {
     helpNames: nil
   )
   
-  @OptionGroup var configOption: ConfigOption
+  @OptionGroup var directoryOption: DirectoryOption
   
   func run() throws {
-    let client = try configOption.client()
+    let client = try directoryOption.client()
     let titles = try client.titles()
       .map({ "\($0.0.path): \($0.1)" })
       .joined(separator: "\n")

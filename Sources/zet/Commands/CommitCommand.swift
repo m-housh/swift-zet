@@ -2,6 +2,7 @@ import ArgumentParser
 import Foundation
 import GitClient
 
+// TODO: Fix so that only one command is needed, message can be `nil`, `last`, or `new message`.
 struct CommitCommand: ParsableCommand {
   
   static let configuration: CommandConfiguration = .init(
@@ -32,7 +33,7 @@ extension CommitCommand {
       helpNames: nil
     )
     
-    @OptionGroup var configOption: ConfigOption
+    @OptionGroup var directoryOption: DirectoryOption
     
     @Argument var message: [String]
     
@@ -40,7 +41,7 @@ extension CommitCommand {
       guard message.count > 0 else {
         fatalError("Must provide a commit message or use `last`")
       }
-      let gitClient = try configOption.gitClient()
+      let gitClient = try directoryOption.gitClient()
       let commit = try gitClient.commit(message: message.joined(separator: " "))
       print(commit)
     }
@@ -63,10 +64,11 @@ extension CommitCommand {
       helpNames: nil
     )
     
-    @OptionGroup var configOption: ConfigOption
+//    @OptionGroup var configOption: ConfigOption
+    @OptionGroup var directoryOption: DirectoryOption
     
     func run() throws {
-      let gitClient = try configOption.gitClient()
+      let gitClient = try directoryOption.gitClient()
       let commit = try gitClient.commit(message: nil)
       print(commit)
     }

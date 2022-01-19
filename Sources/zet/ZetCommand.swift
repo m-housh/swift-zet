@@ -11,7 +11,7 @@ struct ZetCommand: ParsableCommand {
     shouldDisplay: true,
     subcommands: [
       CommitCommand.self,
-      ConfigCommand.self,
+//      ConfigCommand.self,
       CreateCommand.self,
       PullCommand.self,
       PushCommand.self,
