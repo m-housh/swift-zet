@@ -30,7 +30,7 @@ struct CommitCommand: ParsableCommand {
   @Flag(name: .shortAndLong, help: "Use the last commit message as the message for this commit.")
   var last: Bool = false
   
-  @Argument var message: [String]
+  @Argument var message: [String] = []
   
   func run() throws {
     var message = message
