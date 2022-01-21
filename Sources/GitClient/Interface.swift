@@ -66,8 +66,9 @@ public struct GitClient {
     if let message = message {
       if message.lowercased() == "last" {
         commitMessage = try lastMessage()
+      } else {
+        commitMessage = message
       }
-      commitMessage = message
     } else {
       commitMessage = try lastMessage()
     }
