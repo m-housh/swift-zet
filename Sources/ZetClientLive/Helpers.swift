@@ -31,6 +31,15 @@ extension URL {
     return self
   }
   
+  /// Appends `assets` to a url if it doesn't already end with it.
+  var assets: URL {
+    if lastPathComponent != "assets" {
+      return self.appendingPathComponent("assets")
+    }
+    return self
+  }
+  
+  /// Reads the title string from a readme file.
   func title() throws -> String {
     let fileString = try String(contentsOf: self)
     guard let titleLine = fileString.split(separator: "\n")
@@ -73,14 +82,65 @@ extension FileManager {
   ///
   /// - Parameters:
   ///   - path: The parent path to create the sub-directory in.
-  func zetDirectory(in path: URL) throws -> URL {
-    let dir = path.appendingPathComponent(Date().isosec)
+  @discardableResult
+  func createZetDirectory(in path: URL, date: Date = Date()) throws -> URL {
+    let dir = path.appendingPathComponent(date.isosec)
     try createDirectory(
       atPath: dir.relativePath,
       withIntermediateDirectories: false,
       attributes: nil
     )
     return dir
+  }
+  
+  /// Returns the urls to all the readme files in the zet directory.
+  ///
+  /// - Parameters:
+  ///   - path: The parent path to find the readme's in.
+  func readmes(in path: URL) throws -> [URL] {
+    try directories(in: path)
+      .compactMap { directory in
+        let readme = directory.readme
+        guard isReadableFile(atPath: readme.relativePath) else { return nil }
+        return readme
+      }
+  }
+  
+  /// Returns the urls to all the assets directories in the zet directory.
+  ///
+  /// - Parameters:
+  ///   - path: The parent path to find the  assets in.
+  func assets(in path: URL) throws -> [URL] {
+    try directories(in: path)
+      .compactMap { directory in
+        try directories(in: directory)
+          .first(where: { $0.lastPathComponent == "assets" })
+      }
+  }
+  
+  @discardableResult
+  func createReadme(in path: URL, titled title: String) throws -> URL {
+    let readme = path.readme
+    try "# \(title)\n\n".write(to: readme, atomically: true, encoding: .utf8)
+    return readme
+  }
+  
+  @discardableResult
+  func createAssets(in path: URL) throws -> URL {
+    let assets = path.assets
+    try createDirectory(atPath: assets.relativePath, withIntermediateDirectories: true, attributes: nil)
+    return assets
+  }
+  
+  func urls(for type: ZetClient.LastModifiedType, in zetDirectory: URL) throws -> [URL] {
+    switch type {
+    case .assets:
+      return try assets(in: zetDirectory)
+    case .directory:
+      return try directories(in: zetDirectory)
+    case .readme:
+      return try readmes(in: zetDirectory)
+    }
   }
 }
 

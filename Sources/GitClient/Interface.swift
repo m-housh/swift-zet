@@ -60,8 +60,14 @@ public struct GitClient {
   ///
   /// - Parameters:
   ///   - message: The commit message to use, if not supplied then attempts to use the last commit message.
+  ///   - add: Add all files to the commit (equivalent of calling `git add --all && git commit -m ...`).
   @discardableResult
-  public func commit(message: String?) throws -> String {
+  public func commit(message: String?, add: Bool = true) throws -> String {
+    
+    if add {
+      try self.add()
+    }
+    
     var commitMessage: String
     if let message = message {
       if message.lowercased() == "last" {

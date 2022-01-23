@@ -55,6 +55,7 @@ extension CreateCommand {
 extension CreateCommand {
   
   // MARK: Assets
+  // TODO: need to have this add / commit assets to git.
   struct AssetsCommand: ParsableCommand {
     static var configuration: CommandConfiguration = .init(
       commandName: "assets",
@@ -78,7 +79,7 @@ extension CreateCommand {
       
       if let path = path {
         assets = try client.createAssets(in: path)
-      } else if let last = try client.lastModifiedDirectory() {
+      } else if let last = try client.lastModified(.directory) {
         assets = try client.createAssets(in: last)
       }
       

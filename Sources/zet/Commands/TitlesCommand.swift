@@ -25,11 +25,3 @@ struct TitlesCommand: ParsableCommand {
     print(titles)
   }
 }
-
-fileprivate func urlString(url: URL) -> String {
-  var url = url
-  let readme = url.lastPathComponent
-  url.deleteLastPathComponent()
-  let dirname = url.lastPathComponent
-  return "\(dirname)/\(readme)"
-}

@@ -24,6 +24,9 @@ struct CommitCommand: ParsableCommand {
   
   @OptionGroup var directoryOption: DirectoryOption
   
+  @Flag(inversion: .prefixedNo, help: "Add all files to the commit")
+  var add: Bool = true
+  
   @Flag(inversion: .prefixedNo, help: "Enable or disable pushing to remote")
   var push: Bool = true
   
@@ -43,7 +46,7 @@ struct CommitCommand: ParsableCommand {
       message = ["last"]
     }
     let gitClient = try directoryOption.gitClient()
-    let commit = try gitClient.commit(message: message.joined(separator: " "))
+    let commit = try gitClient.commit(message: message.joined(separator: " "), add: add)
     if push {
       try gitClient.push()
     }

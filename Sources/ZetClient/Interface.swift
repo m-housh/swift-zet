@@ -6,8 +6,8 @@ public struct ZetClient {
   /// The zet directory for the client.
   public var zetDirectory: () -> URL
   
-  /// The last modified sub-directory in the zet directory.
-  public var lastModifiedDirectory: () throws -> URL?
+  /// The last modified type in the zet directory.
+  public var lastModified: (LastModifiedType) throws -> URL?
   
   /// Create a new zettelkasten note in the directory.
   var makeZet: (String) throws -> URL
@@ -25,24 +25,43 @@ public struct ZetClient {
   ///
   /// - Parameters:
   ///   - zetDirectory: The zet directory for the client.
-  ///   - lastModifiedDirectory: The last modified sub-directory in the zet directory.
+  ///   - lastModified: The last modified type in the zet directory.
   ///   - makeZet: Create a new zettelkasten note in the directory.
   ///   - makeAssetDirectory: Create an `assets` directory in the given path.
   ///   - fetchTitle: Get the title of a zettelkasten note in the given path.
   public init(
     zetDirectory: @escaping () -> URL,
-    lastModifiedDirectory: @escaping () throws -> URL?,
+    lastModified: @escaping (LastModifiedType) throws -> URL?,
     makeZet: @escaping (String) throws -> URL,
     makeAssetDirectory: @escaping (URL) throws -> URL,
     fetchTitle: @escaping (URL) throws -> String,
     titles: @escaping () throws -> [(URL, String)]
   ) {
     self.zetDirectory = zetDirectory
-    self.lastModifiedDirectory = lastModifiedDirectory
+    self.lastModified = lastModified
     self.makeZet = makeZet
     self.makeAssetDirectory = makeAssetDirectory
     self.fetchTitle =  fetchTitle
     self.titles = titles
+  }
+  
+  public enum LastModifiedType {
+    case assets, directory, readme
+  }
+  
+  public enum ManageRequest {
+    case add
+    case commit
+    case grep
+    case lastMessage
+    case pull
+    case push
+    case status
+  }
+  
+  public enum CreateRequest {
+    case assets
+    case zet(titled: String)
   }
  
   /// Create a new zettelkasten note in the directory with the given title.
@@ -70,4 +89,45 @@ public struct ZetClient {
   public func title(in path: URL) throws -> String {
     try fetchTitle(path)
   }
+}
+
+public struct ZetClient2 {
+  
+  public var zetDirectory: URL
+  
+  public var create: (CreateRequest) throws -> URL
+  public var git: (GitRequest) throws -> String
+  public var lastModified: (LastModifiedRequest) throws -> URL?
+  
+  public init(
+    zetDirectory: URL,
+    create: @escaping (CreateRequest) throws -> URL,
+    git: @escaping (GitRequest) throws -> String,
+    lastModified: @escaping (LastModifiedRequest) throws -> URL?
+  ) {
+    self.zetDirectory = zetDirectory
+    self.create = create
+    self.git = git
+    self.lastModified = lastModified
+  }
+  
+  public enum LastModifiedRequest {
+    case assets, directory, readme
+  }
+  
+  public enum GitRequest {
+    case add
+    case commit(message: String, add: Bool)
+    case grep(search: String)
+    case lastMessage
+    case pull
+    case push
+    case status
+  }
+  
+  public enum CreateRequest {
+    case assets
+    case zet(titled: String)
+  }
+  
 }
