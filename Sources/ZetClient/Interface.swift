@@ -95,15 +95,15 @@ public struct ZetClient2 {
   
   public var zetDirectory: URL
   
-  public var create: (CreateRequest) throws -> URL
-  public var git: (GitRequest) throws -> String
-  public var lastModified: (LastModifiedRequest) throws -> URL?
+  public var create: (CreateRequest) -> Result<URL, Error>
+  public var git: (GitRequest) -> Result<String, Error>
+  public var lastModified: (LastModifiedRequest) -> Result<URL?, Error>
   
   public init(
     zetDirectory: URL,
-    create: @escaping (CreateRequest) throws -> URL,
-    git: @escaping (GitRequest) throws -> String,
-    lastModified: @escaping (LastModifiedRequest) throws -> URL?
+    create: @escaping (CreateRequest) -> Result<URL, Error>,
+    git: @escaping (GitRequest) -> Result<String, Error>,
+    lastModified: @escaping (LastModifiedRequest) -> Result<URL?, Error>
   ) {
     self.zetDirectory = zetDirectory
     self.create = create
@@ -111,23 +111,40 @@ public struct ZetClient2 {
     self.lastModified = lastModified
   }
   
-  public enum LastModifiedRequest {
-    case assets, directory, readme
+  public enum CreateRequest {
+    case assets(in: URL?)
+    case directory(date: Date?)
+    case zet(titled: String)
   }
   
   public enum GitRequest {
     case add
-    case commit(message: String, add: Bool)
+    case commit(CommitRequest, add: Bool)
     case grep(search: String)
     case lastMessage
     case pull
     case push
     case status
+    
+    public enum CommitRequest {
+      case last
+      case message(String)
+      
+      public init(_ string: String? = nil) {
+        guard let string = string else {
+          self = .last
+          return
+        }
+        if string.lowercased() == "last" {
+          self = .last
+        } else {
+          self = .message(string)
+        }
+      }
+    }
   }
   
-  public enum CreateRequest {
-    case assets
-    case zet(titled: String)
+  public enum LastModifiedRequest {
+    case assets, directory, readme
   }
-  
 }

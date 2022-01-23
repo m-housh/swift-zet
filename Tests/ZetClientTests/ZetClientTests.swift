@@ -10,7 +10,7 @@ final class ZetClientTests: XCTestCase {
     let zet = try zetClient.createZet(title: "Test")
     XCTAssert(FileManager.default.fileExists(atPath: zet.relativePath))
     
-    let last = try zetClient.lastModifiedDirectory()
+    let last = try zetClient.lastModified(.directory)
     XCTAssertNotNil(last)
     let zetDir = zet.deletingLastPathComponent()
     XCTAssertEqual(last?.lastPathComponent, zetDir.lastPathComponent)

@@ -13,7 +13,10 @@ let package = Package(
   targets: [
     .target(
       name: "GitClient",
-      dependencies: ["ShellCommand"]
+      dependencies: [
+        "ShellCommand",
+        "ZetClient"
+      ]
     ),
     .testTarget(
       name: "GitClientTests",
@@ -30,7 +33,10 @@ let package = Package(
     ),
     .target(
       name: "ZetClientLive",
-      dependencies: ["ZetClient"]
+      dependencies: [
+        "ZetClient",
+        "GitClient"
+      ]
     ),
     .testTarget(
       name: "ZetClientTests",
@@ -51,7 +57,7 @@ let package = Package(
     .executableTarget(
       name: "zet",
       dependencies: [
-        "GitClient",
+//        "GitClient",
         "ShellCommand",
         "ZetClientLive",
         "ZetEnv",

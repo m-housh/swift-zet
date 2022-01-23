@@ -1,5 +1,6 @@
 import Foundation
 @_exported import ZetClient
+import GitClient
 
 extension ZetClient {
   
@@ -36,6 +37,30 @@ extension ZetClient {
           .sorted(by: modificationDate(_:_:))
         let titles = try readmes.map { try $0.title() }
         return Array(zip(readmes, titles))
+      }
+    )
+  }
+}
+
+extension ZetClient2 {
+  
+  public static func live(
+    zetDirectory: URL,
+    fileManager: FileManager = .default,
+    gitClient: GitClient2? = nil
+  ) -> ZetClient2 {
+    .init(
+      zetDirectory: zetDirectory,
+      create: { request in
+        request.handle(zetDirectory: zetDirectory, fileManager: fileManager)
+      },
+      git: { request in
+        // fix
+          .success("fix me")
+//        (gitClient ?? .live(zetDirectory: zetDirectory, environment: nil)).handle(request)
+      },
+      lastModified: { request in
+        request.handle(zetDirectory: zetDirectory, fileManager: fileManager)
       }
     )
   }

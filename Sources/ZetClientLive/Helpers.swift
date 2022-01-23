@@ -1,4 +1,12 @@
 import Foundation
+import ZetClient
+import GitClient
+
+extension Result {
+  static func catching(_ result: @escaping () throws -> Success) -> Self where Failure == Error {
+    .init(catching: result)
+  }
+}
 
 extension Date {
   
@@ -143,6 +151,68 @@ extension FileManager {
     }
   }
 }
+
+extension ZetClient2.LastModifiedRequest {
+  
+  private func urls(zetDirectory: URL, fileManager: FileManager) throws -> [URL] {
+    switch self {
+    case .assets:
+      return try fileManager.assets(in: zetDirectory)
+    case .directory:
+      return try fileManager.directories(in: zetDirectory)
+    case .readme:
+      return try fileManager.readmes(in: zetDirectory)
+    }
+  }
+  
+  func handle(zetDirectory: URL, fileManager: FileManager) -> Result<URL?, Error> {
+    .catching {
+      try urls(zetDirectory: zetDirectory, fileManager: fileManager)
+        .sorted(by: modificationDate(_:_:))
+        .first
+    }
+  }
+}
+
+extension ZetClient2.CreateRequest {
+  
+  struct AssetsPathNotFound: Error { }
+  
+  func findAssetsPath(zetDirectory: URL, fileManager: FileManager) throws -> URL? {
+    try ZetClient2.LastModifiedRequest.directory
+      .handle(zetDirectory: zetDirectory, fileManager: fileManager)
+      .get()
+  }
+  
+  func assetsPath(_ path: URL?, zetDirectory: URL, fileManager: FileManager) throws -> URL {
+    guard let path = path else {
+      guard let path = try findAssetsPath(zetDirectory: zetDirectory, fileManager: fileManager) else {
+        throw AssetsPathNotFound()
+      }
+      return path
+    }
+    return path
+  }
+  
+  func handle(zetDirectory: URL, fileManager: FileManager) -> Result<URL, Error> {
+    switch self {
+    case let .assets(path):
+      return .catching {
+        try fileManager
+          .createAssets(in: assetsPath(path, zetDirectory: zetDirectory, fileManager: fileManager))
+      }
+    case let .directory(date):
+      return .catching {
+        try fileManager.createZetDirectory(in: zetDirectory, date: date ?? .init())
+      }
+    case let .zet(title):
+      return .catching {
+        try fileManager.createReadme(in: zetDirectory, titled: title)
+      }
+    }
+  }
+}
+
 
 /// The format for an `isosec` string or date.
 fileprivate let isosecFormatter: DateFormatter = {

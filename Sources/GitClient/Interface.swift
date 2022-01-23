@@ -1,4 +1,5 @@
 import Foundation
+import ZetClient
 
 /// Represents the interactions / git commands performed on the zet repository.
 public struct GitClient {
@@ -108,5 +109,43 @@ public struct GitClient {
   @discardableResult
   public func status() throws -> String {
     try _status().shellOutput()
+  }
+}
+
+public struct GitClient2 {
+  
+  public var handle: (GitRequest) -> Result<String, Error>
+  
+  public enum GitRequest {
+    case add
+    case commit(message: String)
+    case grep(search: String)
+    case lastMessage
+    case pull
+    case push
+    case status
+    
+//    public enum CommitRequest: ExpressibleByStringLiteral {
+//      public typealias StringLiteralType = String
+//
+//      case last
+//      case message(String)
+//
+//      public init(stringLiteral value: String) {
+//        self.init(value)
+//      }
+//
+//      public init(_ string: String? = nil) {
+//        guard let string = string else {
+//          self = .last
+//          return
+//        }
+//        if string.lowercased() == "last" {
+//          self = .last
+//        } else {
+//          self = .message(string)
+//        }
+//      }
+//    }
   }
 }
