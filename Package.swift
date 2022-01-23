@@ -12,6 +12,14 @@ let package = Package(
   ],
   targets: [
     .target(
+      name: "DirectoryClient",
+      dependencies: []
+    ),
+    .testTarget(
+      name: "DirectoryClientTests",
+      dependencies: ["DirectoryClient"]
+    ),
+    .target(
       name: "GitClient",
       dependencies: [
         "ShellCommand",
