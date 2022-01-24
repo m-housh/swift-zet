@@ -1,2 +1,2 @@
 
-let VERSION = "0.2.9"
+let VERSION = "0.3.0"
