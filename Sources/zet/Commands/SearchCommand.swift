@@ -21,9 +21,8 @@ struct SearchCommand: ParsableCommand {
   var search: [String]
   
   func run() throws {
-    let search = search.joined(separator: " ")
-    let gitClient = try directoryOption.gitClient()
-    let results = try gitClient.grep(search: search)
-    print(results)
+    try directoryOption.zetClient()
+      .flatMap { $0.git(.grep(search: search.joined(separator: " "))) }
+      .print()
   }
 }

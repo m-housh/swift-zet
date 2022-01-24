@@ -35,29 +35,20 @@ struct LastCommand: ParsableCommand {
   var type: LastType = .readme
   
   func run() throws {
-    let client = try directoryOption.client()
-    let url: URL?
-    switch type {
-    case .message:
-      let gitClient = try directoryOption.gitClient()
-      let message = try gitClient.lastMessage()
-      print(message)
-      return // early out for git message because it's not a url.
-    case .assets:
-      url = try client.lastModified(.assets)
-    case .directory:
-      url = try client.lastModified(.directory)
-    case .readme:
-      url = try client.lastModified(.readme)
-    }
-    guard let url = url else {
-      throw LastError.notFound
-    }
-    print(url.path)
-  }
-  
-  enum LastError: Error {
-    case notFound
+    try directoryOption.zetClient()
+      .flatMap { client -> Result<String, Error> in
+        switch type {
+        case .message:
+          return client.git(.lastMessage)
+        case .directory:
+          return client.lastModified(.directory).path()
+        case .assets:
+          return client.lastModified(.assets).path()
+        case .readme:
+          return client.lastModified(.readme).path()
+        }
+      }
+      .print()
   }
   
   enum LastType: String, ExpressibleByArgument {

@@ -2,7 +2,6 @@ import ArgumentParser
 import Foundation
 import GitClient
 import ZetClient
-import ZetClientLive
 import ZetEnv
 import ShellCommand
 
@@ -41,13 +40,11 @@ extension CreateCommand {
     var title: [String]
    
     func run() throws {
-      let title = title.joined(separator: " ")
-      let client = try directoryOption.client()
-      let readme = try client.createZet(title: title)
-      let gitClient = try directoryOption.gitClient()
-      try gitClient.add()
-      try gitClient.commit(message: title)
-      print("\(readme.path)")
+      try directoryOption.zetClient()
+        .createReadme(titled: title.joined(separator: " "))
+        .commit()
+        .path()
+        .print()
     }
   }
 }
@@ -74,20 +71,63 @@ extension CreateCommand {
     var path: URL?
     
     func run() throws {
-      let client = try directoryOption.client()
-      var assets: URL?
-      
-      if let path = path {
-        assets = try client.createAssets(in: path)
-      } else if let last = try client.lastModified(.directory) {
-        assets = try client.createAssets(in: last)
-      }
-      
-      guard let assets = assets else {
-        fatalError("Invalid path")
-      }
-      
-      print("\(assets.path)")
+      try directoryOption.zetClient()
+        .parseAssetsPath(path: path)
+        .createAssets()
+        .path()
+        .print()
     }
+  }
+}
+
+extension Result where Success == ZetClient, Failure == Error {
+  
+  func parseAssetsPath(path: URL?) -> Result<(ZetClient, URL), Error> {
+    flatMap { client in
+      guard let path = path else {
+        return .init {
+          let last = try client.lastModified(.directory).get()
+          return (client, last)
+        }
+      }
+      return .success((client, path))
+    }
+  }
+  
+  func createReadme(titled title: String) -> Result<(ZetClient, URL, String), Error> {
+    flatMap { client in
+      client.create(.zet(titled: title))
+        .map { url in (client, url, title) }
+    }
+  }
+}
+
+extension Result where Success == (ZetClient, URL), Failure == Error {
+  
+  func createAssets() -> Result<URL, Error> {
+    flatMap { client, assetPath in
+      client.create(.assets(parent: assetPath))
+        .flatMap { url in
+          client.git(.add)
+            .map { _ in url }
+        }
+    }
+  }
+}
+
+extension Result where Success == (ZetClient, URL, String), Failure == Error {
+  private func addToGit() -> Self {
+    flatMap { client, url, title in
+      client.git(.add)
+        .flatMap { _ in self }
+    }
+  }
+  
+  func commit() -> Result<URL, Error> {
+    addToGit()
+      .flatMap { client, url, title in
+        client.git(.commit(message: title))
+          .map { _ in url }
+      }
   }
 }

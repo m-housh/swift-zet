@@ -1,6 +1,7 @@
 import ArgumentParser
 import Foundation
 import GitClient
+import ZetClient
 
 struct CommitCommand: ParsableCommand {
   
@@ -36,20 +37,56 @@ struct CommitCommand: ParsableCommand {
   @Argument var message: [String] = []
   
   func run() throws {
-    var message = message
     
-    if message.count == 0 {
-      message.append("last")
-    }
+    try directoryOption.zetClient()
+      .parseCommitMessage(message: message, last: last)
+      .addToGit(shouldAdd: add)
+      .commit()
+      .push(shouldPush: push)
+      .print()
     
-    if last {
-      message = ["last"]
+  }
+}
+
+extension Result where Success == ZetClient, Failure == Error {
+  
+  func parseCommitMessage(message: [String], last: Bool) -> Result<(ZetClient, String), Error> {
+    flatMap { client in
+      if last == true || (message.count == 1 && message.first?.lowercased() == "last") {
+        return client.git(.lastMessage)
+          .map { (client, $0) }
+      }
+      return .success((client, message.joined(separator: " ")))
     }
-    let gitClient = try directoryOption.gitClient()
-    let commit = try gitClient.commit(message: message.joined(separator: " "), add: add)
-    if push {
-      try gitClient.push()
+  }
+}
+
+extension Result where Success == (ZetClient, String), Failure == Error {
+  
+  func addToGit(shouldAdd: Bool) -> Self {
+    flatMap { client, _ in
+      if shouldAdd {
+        return client.git(.add).flatMap { _ in self }
+      }
+      return self
     }
-    print(commit)
+  }
+  
+  func commit() -> Self {
+    flatMap { client, message in
+      client.git(.commit(message: message))
+        .map { (client, $0) }
+    }
+  }
+  
+  
+  
+  func push(shouldPush: Bool) -> Result<String, Error> {
+    flatMap { client, message in
+      if shouldPush {
+        return client.git(.push).map { _ in message }
+      }
+      return .success(message)
+    }
   }
 }

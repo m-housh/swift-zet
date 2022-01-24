@@ -18,8 +18,8 @@ struct PushCommand: ParsableCommand {
   @OptionGroup var directoryOption: DirectoryOption
   
   func run() throws {
-    let client = try directoryOption.gitClient()
-    let push = try client.push()
-    print(push)
+    try directoryOption.zetClient()
+      .flatMap { $0.git(.push) }
+      .print()
   }
 }
