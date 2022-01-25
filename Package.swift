@@ -40,12 +40,6 @@ let package = Package(
         "GitClient"
       ]
     ),
-    .testTarget(
-      name: "ZetClientTests",
-      dependencies: [
-        "ZetClient"
-      ]
-    ),
     .target(
       name: "ZetEnv",
       dependencies: []
