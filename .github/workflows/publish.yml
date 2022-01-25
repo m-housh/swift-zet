@@ -48,6 +48,7 @@ jobs:
         with:
           repository: m-housh/swift-zet
           tap: m-housh/homebrew-formulae
+          formula: Formula/swift-zet.rb
           message: |
             Add bottles for swift-zet ${{ github.event.release.tag_name }}
             on macOS 11.0 (Big Sur)
