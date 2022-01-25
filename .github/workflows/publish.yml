@@ -42,7 +42,7 @@ jobs:
     name: Update the Homebrew formula again with bottle
     runs-on: ubuntu-latest
     needs:
-      - bottle_macos_big_sir
+      - bottle_macos_big_sur
     steps:
       - uses: NSHipster/update-homebrew-formula-action@main
         with:
