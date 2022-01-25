@@ -1,0 +1,55 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  formula:
+    name: Update Homebrew Formula
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update the Homebrew formula with latest release
+        uses: NSHipster/update-homebrew-formula-action@main
+        with:
+          repository: m-housh/swift-zet
+          tap: m-housh/homebrew-formulae
+          formula: Formula/swift-zet.rb
+        env:
+          GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+
+  bottle_macos_big_sur:
+    name: Build and distribute Homebrew bottle for macOS Big Sur
+    runs-on: macos-11.0
+    needs: [formula]
+    steps:
+      - name: Build a bottle using Homebrew
+        run: |
+          brew tap m-housh/formulae
+          brew install --build-bottle --verbose swift-zet
+          brew bottle swift-zet
+      - name: Upload the bottle to the Github release
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./swift-zet--${{ github.event.release.tag_name }}.big_sur.bottle.1.tar.gz
+          asset_name: swift-zet-${{ github.event.release.tag_name }}.big_sur.bottle.1.tar.gz
+          asset_content_type: application/gzip
+
+  update_formula_bottle:
+    name: Update the Homebrew formula again with bottle
+    runs-on: ubuntu-latest
+    needs:
+      - bottle_macos_big_sir
+    steps:
+      - uses: NSHipster/update-homebrew-formula-action@main
+        with:
+          repository: m-housh/swift-zet
+          tap: m-housh/homebrew-formulae
+          message: |
+            Add bottles for swift-zet ${{ github.event.release.tag_name }}
+            on macOS 11.0 (Big Sur)
+          env:
+            GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
