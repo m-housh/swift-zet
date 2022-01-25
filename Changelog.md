@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unrelased]
 
+## [0.3.7]
+
+### Fixed
+
+- Typo in publish workflow
+
 ## [0.3.6]
 
 ### Fixed
