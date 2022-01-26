@@ -16,7 +16,7 @@ struct CommitCommand: ParsableCommand {
     commandName: "commit",
     abstract: "Commit the zets to git.",
     discussion: discussion,
-    version: VERSION,
+    version: VERSION ?? "0.0.0",
     shouldDisplay: true,
     subcommands: [],
     defaultSubcommand: nil,

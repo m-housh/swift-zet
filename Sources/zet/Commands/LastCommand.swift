@@ -22,7 +22,7 @@ struct LastCommand: ParsableCommand {
     commandName: "last",
     abstract: "Get the the last modfied <type>.",
     discussion: discussion,
-    version: VERSION,
+    version: VERSION ?? "0.0.0",
     shouldDisplay: true,
     subcommands: [],
     defaultSubcommand: nil,

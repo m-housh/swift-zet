@@ -8,7 +8,7 @@ struct StatusCommand: ParsableCommand {
     commandName: "status",
     abstract: "Print the git status of the zets.",
     discussion: "",
-    version: VERSION,
+    version: VERSION ?? "0.0.0",
     shouldDisplay: true,
     subcommands: [],
     defaultSubcommand: nil,

@@ -8,7 +8,7 @@ struct PushCommand: ParsableCommand {
     commandName: "push",
     abstract: "Push repository to remote.",
     discussion: "",
-    version: VERSION,
+    version: VERSION ?? "0.0.0",
     shouldDisplay: true,
     subcommands: [],
     defaultSubcommand: nil,

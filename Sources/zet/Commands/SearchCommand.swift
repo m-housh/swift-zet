@@ -8,7 +8,7 @@ struct SearchCommand: ParsableCommand {
     commandName: "search",
     abstract: "Search for the string in the zets.",
     discussion: "",
-    version: VERSION,
+    version: VERSION ?? "0.0.0",
     shouldDisplay: true,
     subcommands: [],
     defaultSubcommand: nil,

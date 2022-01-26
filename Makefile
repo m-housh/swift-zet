@@ -3,7 +3,9 @@ bindir = $(prefix)/bin
 libdir = $(prefix)/lib
 
 build:
-	swift build -c release --disable-sandbox
+	swiftc ./scripts/build.swift
+	./build
+	rm ./build
 	
 install: build
 	install -d "$(bindir)" "$(libdir)"

@@ -8,7 +8,7 @@ struct TitlesCommand: ParsableCommand {
     commandName: "titles",
     abstract: "Get all the titles of the zets.",
     discussion: "",
-    version: VERSION,
+    version: VERSION ?? "0.0.0",
     shouldDisplay: true,
     subcommands: [],
     defaultSubcommand: nil,

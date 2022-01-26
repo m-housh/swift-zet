@@ -8,7 +8,7 @@ struct PullCommand: ParsableCommand {
     commandName: "pull",
     abstract: "Pull repository from remote.",
     discussion: "",
-    version: VERSION,
+    version: VERSION ?? "0.0.0",
     shouldDisplay: true,
     subcommands: [],
     defaultSubcommand: nil,

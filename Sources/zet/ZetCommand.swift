@@ -7,7 +7,7 @@ struct ZetCommand: ParsableCommand {
     commandName: "zet",
     abstract: "The zet command",
     discussion: "",
-    version: VERSION,
+    version: VERSION ?? "0.0.0",
     shouldDisplay: true,
     subcommands: [
       CreateCommand.self, // keep this first since it's the default command
