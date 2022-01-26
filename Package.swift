@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
   name: "swift-zet",
   platforms: [
-    .macOS(.v10_15)
+    .macOS(.v11)
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
